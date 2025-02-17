@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Formularios</title>
+    <style>
+        .valid { color: green; }
+        .invalid { color: red; }
+        .correcto { border: 2px solid green; }
+        .incorrecto { border: 2px solid red; }
+    </style>
+</head>
+<body>
+    <h2>API de Validación en JS</h2>
+    <form id="form1">
+        <label>Mayor de 18 años:</label>
+        <input type="number" id="edad" min="0" />
+        <span id="edadMsg"></span>
+        <br>
+        <label>Formato dd-mm-AAAA:</label>
+        <input type="text" id="fecha" placeholder="01-01-2025" />
+        <span id="fechaMsg"></span>
+        <br>
+        <button type="submit">Enviar</button>
+    </form>
+    
+    <h2>Validación de Formularios en JS</h2>
+    <form id="form2">
+        <label>Entre 3 y 5 letras:</label>
+        <input type="text" id="letras" />
+        <span id="letrasMsg"></span>
+        <br>
+        <label>Formato email válido:</label>
+        <input type="email" id="email" />
+        <span id="emailMsg"></span>
+        <br>
+        <label>Selecciona 2 checkboxes:</label><br>
+        <input type="checkbox" class="check" value="1"> Opción 1
+        <input type="checkbox" class="check" value="2"> Opción 2
+        <input type="checkbox" class="check" value="3"> Opción 3
+        <span id="checkboxMsg"></span>
+        <br>
+        <label>Selecciona 2 opciones del select:</label>
+        <select id="select" multiple>
+            <option value="1">Opción 1</option>
+            <option value="2">Opción 2</option>
+            <option value="3">Opción 3</option>
+        </select>
+        <span id="selectMsg"></span>
+        <br>
+        <button type="submit">Enviar</button>
+    </form>
+    
+    <script>
+        function validarEdad() {
+            let edad = document.getElementById("edad").value;
+            let msg = document.getElementById("edadMsg");
+            if (edad >= 18) {
+                msg.textContent = "Válido";
+                msg.className = "valid";
+            } else {
+                msg.textContent = "Debe ser mayor de 18 años";
+                msg.className = "invalid";
+            }
+        }
+        
+        function validarFecha() {
+            let fecha = document.getElementById("fecha").value;
+            let regex = /^\d{2}-\d{2}-\d{4}$/;
+            let msg = document.getElementById("fechaMsg");
+            if (regex.test(fecha)) {
+                msg.textContent = "Válido";
+                msg.className = "valid";
+            } else {
+                msg.textContent = "Formato incorrecto";
+                msg.className = "invalid";
+            }
+        }
+        
+        function validarLetras() {
+            let letras = document.getElementById("letras").value;
+            let msg = document.getElementById("letrasMsg");
+            if (letras.length >= 3 && letras.length <= 5) {
+                msg.textContent = "Válido";
+                msg.className = "valid";
+            } else {
+                msg.textContent = "Debe tener entre 3 y 5 letras";
+                msg.className = "invalid";
+            }
+        }
+        
+        function validarCheckbox() {
+            let checkboxes = document.querySelectorAll(".check:checked");
+            let msg = document.getElementById("checkboxMsg");
+            if (checkboxes.length === 2) {
+                msg.textContent = "Correcto";
+                msg.className = "valid";
+            } else {
+                msg.textContent = "Debe seleccionar exactamente 2";
+                msg.className = "invalid";
+            }
+        }
+        
+        function validarSelect() {
+            let select = document.getElementById("select");
+            let seleccionados = [...select.options].filter(opt => opt.selected).length;
+            let msg = document.getElementById("selectMsg");
+            if (seleccionados === 2) {
+                msg.textContent = "Correcto";
+                msg.className = "valid";
+                select.style.backgroundColor = "lightgreen";
+            } else {
+                msg.textContent = "Debe seleccionar exactamente 2";
+                msg.className = "invalid";
+                select.style.backgroundColor = "white";
+            }
+        }
+        
+        document.getElementById("edad").addEventListener("input", validarEdad);
+        document.getElementById("fecha").addEventListener("input", validarFecha);
+        document.getElementById("letras").addEventListener("input", validarLetras);
+        document.getElementById("email").addEventListener("input", () => {
+            let email = document.getElementById("email");
+            let msg = document.getElementById("emailMsg");
+            if (email.validity.valid) {
+                msg.textContent = "Válido";
+                msg.className = "valid";
+            } else {
+                msg.textContent = "Email inválido";
+                msg.className = "invalid";
+            }
+        });
+        document.querySelectorAll(".check").forEach(el => el.addEventListener("change", validarCheckbox));
+        document.getElementById("select").addEventListener("change", validarSelect);
+        
+        document.getElementById("form1").addEventListener("submit", function(e) {
+            validarEdad();
+            validarFecha();
+            if (document.querySelector(".invalid")) e.preventDefault();
+        });
+        
+        document.getElementById("form2").addEventListener("submit", function(e) {
+            validarLetras();
+            validarCheckbox();
+            validarSelect();
+            if (document.querySelector(".invalid")) e.preventDefault();
+        });
+    </script>
+</body>
+</html>
